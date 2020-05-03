@@ -1,0 +1,14 @@
+# Python directories
+/build
+/dist
+*.egg-info
+__pycache__
+
+# IDE files
+.vscode
+*.iml
+.idea
+
+# Shit I use locally
+/htmldocs
+/test.py
