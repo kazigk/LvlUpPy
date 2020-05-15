@@ -6,6 +6,7 @@ from .models.Order import Order
 from .models.Payment import Payment
 from .models.PaymentLink import PaymentLink
 from .models.PaymentLinkInfo import PaymentLinkInfo
+from .models.PageModel import PageModel
 
 
 class UpClient(RequestsHelper):
@@ -25,13 +26,26 @@ class UpClient(RequestsHelper):
     """:rtype: UserInfo"""
     return UserInfo(**self._get('/me'))
 
-  def getAuditLog(self):
-    """:rtype: [AuditLog]"""
-    # TODO: implement query parameters
-    return [AuditLog(**i) for i in self._get('/me/log')['items']]
+  def getAuditLog(self, limit=10, afterId=None, beforeId=None):
+    """
+    :rtype: PageModel[AuditLog]
+    :param afterId: Get results after ID
+    :type afterId: int
+    :param beforeId: Get results before ID
+    :type beforeId: int
+    """
+    return PageModel(
+      **self._get_page('/me/log', limit, afterId, beforeId), model=AuditLog
+    )
 
   def getReferralCodes(self):
-    """:rtype: [ReferralCode]"""
+    """
+    :rtype: [ReferralCode]
+    :param afterId: Get results after ID
+    :type afterId: int
+    :param beforeId: Get results before ID
+    :type beforeId: int
+    """
     r = self._get('/me/referral')
     # unlike other endpoints, this actually return null value
     # instead of empty list when no promo codes are created on the account
@@ -44,15 +58,27 @@ class UpClient(RequestsHelper):
     """:rtype: str"""
     return self._post('/me/referral/generic')['code']
 
-  def getOrders(self):
-    """:rtype: [Order]"""
-    # TODO: implement query parameters
-    return [Order(**i) for i in self._get('/orders')['items']]
+  def getOrders(self, limit=10, afterId=None, beforeId=None):
+    """
+    :rtype: PageModel[Order]
+    :param afterId: Get results after ID
+    :type afterId: int
+    :param beforeId: Get results before ID
+    :type beforeId: int
+    """
+    return PageModel(
+      **self._get_page('/orders', limit, afterId, beforeId), model=Order
+    )
 
-  def getPayments(self):
-    """:rtype: [Payment]"""
-    # TODO: implement query parameters
-    return [Payment(**i) for i in self._get('/payments')['items']]
+  def getPayments(self, limit=10, afterId=None, beforeId=None):
+    """
+    :rtype: PageModel[Payment]
+    :type afterId: int
+    :type beforeId: int
+    """
+    return PageModel(
+      **self._get_page('/payments', limit, afterId, beforeId), model=Payment
+    )
 
   def createPaymentLink(self, amount, redirectUrl=None, webhookUrl=None):
     """

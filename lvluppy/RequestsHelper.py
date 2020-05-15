@@ -20,9 +20,9 @@ class RequestsHelper:
     else:
       raise WtfException(response)
 
-  def _get(self, path):
+  def _get(self, path, params=None):
     return self._processResponse(
-      requests.get(self._baseUrl + path, headers=self._headers)
+      requests.get(self._baseUrl + path, headers=self._headers, params=params)
     )
 
   def _post(self, path, json=None):
@@ -39,3 +39,10 @@ class RequestsHelper:
     return self._processResponse(
       requests.delete(self._baseUrl + path, headers=self._headers)
     )
+
+  def _get_page(self, path, limit=10, afterId=None, beforeId=None):
+    return self._get(path, params={
+      'limit': limit,
+      'afterId': afterId,
+      'beforeId': beforeId
+    })
