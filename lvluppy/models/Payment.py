@@ -16,6 +16,7 @@ class Payment(BaseModel):
     self.__amount = float(amount)
     self.__createdAt = self._parseDateTime(createdAt)
     self.__description = description
+    self.__id = id
     self.__method = PaymentMethod(methodId)
     self.__serviceType = ServiceType(serviceId)
 
@@ -33,6 +34,11 @@ class Payment(BaseModel):
   def description(self):
     """:rtype: str"""
     return self.__description
+
+  @property
+  def id(self):
+    """:rtype: int"""
+    return self.__id
 
   @property
   def method(self):
