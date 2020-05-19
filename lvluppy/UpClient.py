@@ -7,6 +7,8 @@ from .models.Payment import Payment
 from .models.PaymentLink import PaymentLink
 from .models.PaymentLinkInfo import PaymentLinkInfo
 from .models.PageModel import PageModel
+from .models.Service import Service
+from .models.VPSInfo import VPSInfo
 
 
 class UpClient(RequestsHelper):
@@ -104,3 +106,28 @@ class UpClient(RequestsHelper):
   def getWalletBalance(self):
     """:rtype: float"""
     return self._get('/wallet')['balancePlnInt'] / 100.0
+
+  def getServices(self, limit=10, afterId=None, beforeId=None):
+    """:rtype: [Service]"""
+    return [Service(**i) for i in self._get('/services')['services']]
+
+  def startVPS(self, id):
+    """
+    :param id: ID of VPS
+    :type id: int
+    """
+    self._post('/services/vps/{0}/start'.format(id))
+
+  def stopVPS(self, id):
+    """
+    :param id: ID of VPS
+    :type id: int
+    """
+    self._post('/services/vps/{0}/stop'.format(id))
+
+  def getVPSInfo(self, id):
+    """
+    :param id: ID of VPS
+    :type id: int
+    """
+    return VPSInfo(**self._get('/services/vps/{0}/stats'.format(id)))
